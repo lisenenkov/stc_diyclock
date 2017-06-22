@@ -326,13 +326,18 @@ int main()
 
         // sample adc, run frequently
         if (count % 4 == 0) {
-            // auto-dimming, by dividing adc range into 8 steps
-            lightval = getADCResult8(ADC_LIGHT) >> 3;
             temp = gettemp(getADCResult(ADC_TEMP)) + (cfg_table[CFG_TEMP_BYTE] & CFG_TEMP_MASK) - 4;
-
-            // set floor of dimming range
-            if (lightval < 4) {
-                lightval = 4;
+		
+            // auto-dimming
+            lightval = getADCResult8(ADC_LIGHT);
+            if (lightval <= 32) {
+		lightval = 4;
+            } else if (lightval <= 128) {
+		//div by 8
+		lightval = lightval >> 3;
+            } else {
+		//adjust
+		lightval = lightval - 112;
             }
         }
 
