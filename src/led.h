@@ -14,11 +14,7 @@
 #define LED_h   0x12
 #define LED_dp  0x13
 
-const uint8_t
-#ifndef WITHOUT_LEDTABLE_RELOC
-__at (0x1000)
-#endif
-ledtable[]
+const uint8_t __at (0x1000) ledtable[]
  = {
     // digit to led digit lookup table
     // dp,g,f,e,d,c,b,a
@@ -31,11 +27,7 @@ ledtable[]
     0b10000010, //     0b01111101, // 6
     0b11111000, //     0b00000111, // 7
     0b10000000, //     0b01111111, // 8
-#ifdef WITH_ALT_LED9
-    0b10010000, //     0b01101111, // 9 with d segment
-#else
-    0b10011000, //     0b01100111, // 9 without d segment
-#endif
+    0b10010000, //     0b01101111, // 9
     0b10001000, //     0b01110111, // A
     0b10000011, //     0b01111100, // b
     0b11000110, //     0b00111001, // C
@@ -50,11 +42,7 @@ ledtable[]
 
 // Same but with abc <-> def
 
-const uint8_t
-#ifndef WITHOUT_LEDTABLE_RELOC
-__at (0x1100)
-#endif
-ledtable2[]
+const uint8_t __at (0x1100) ledtable2[]
  ={
     0b11000000, // was 0b00111111, // 0
     0b11001111, //     0b00000110, // 1
@@ -65,11 +53,7 @@ ledtable2[]
     0b10010000, //     0b01111101, // 6
     0b11000111, //     0b00000111, // 7
     0b10000000, //     0b01111111, // 8
-#ifdef WITH_ALT_LED9
-    0b10000010, //     0b01101111, // 9 with d segment
-#else
-    0b10000011, //     0b01100111, // 9 without d segment
-#endif
+    0b10000010, //     0b01101111, // 9
     0b10000001, //     0b01110111, // A
     0b10011000, //     0b01111100, // b
     0b11110000, //     0b00111001, // C
@@ -100,4 +84,4 @@ uint8_t dbuf[4];
                         tmp=ledtable[tmpbuf[1]]; if (dot1) tmp&=0x7F; dbuf[1]=tmp; \
                         tmp=ledtable[tmpbuf[3]]; if (dot3) tmp&=0x7F; dbuf[3]=tmp; \
                         tmp=ledtable2[tmpbuf[2]]; if (dot2) tmp&=0x7F; dbuf[2]=tmp; }
-                        
+                         
