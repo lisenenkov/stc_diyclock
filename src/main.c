@@ -508,6 +508,7 @@ void checkDateNeedAdjust() {
 			ds_writebyte(DS_ADDR_MINUTES, gpstm_table[DS_ADDR_MINUTES]);
 			ds_writebyte(DS_ADDR_HOUR, gpstm_table[DS_ADDR_HOUR]);
 			ds_writebyte(DS_ADDR_DAY, gpstm_table[DS_ADDR_DAY]);
+			ds_writebyte(DS_ADDR_WEEKDAY, gpstm_table[DS_ADDR_WEEKDAY]);
 			ds_writebyte(DS_ADDR_MONTH, gpstm_table[DS_ADDR_MONTH]);
 			ds_writebyte(DS_ADDR_YEAR, gpstm_table[DS_ADDR_YEAR]);
 
@@ -531,13 +532,14 @@ void update_temp(){
 }
 
 void update_lightval(){
-	uint16_t new_lightval = getADCResult8(ADC_LIGHT);
-	if(new_lightval < raw_lightval){
+	uint16_t new_lightval = getADCResult8(ADC_LIGHT) << 8;
+	if(new_lightval > raw_lightval){
 		//dim instantly
-		raw_lightval = new_lightval << 8;
+		raw_lightval = new_lightval;
 	}else{
 		//slowly increase light
-		raw_lightval += new_lightval << 6 - raw_lightval >> 2;
+		raw_lightval -= raw_lightval >> 2;
+		raw_lightval += new_lightval >> 2;
 	};
 	
 	if (raw_lightval <= 32 * 256) {
